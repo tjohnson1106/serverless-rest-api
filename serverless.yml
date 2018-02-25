@@ -5,7 +5,7 @@ provider:
   stage: dev
   region: us-east-1
   environment: 
-  DYNAMODB_TABLE :  'notes'
+      DYNAMODB_TABLE:  'notes'
   iamRoleStatements :
     -  Effect:  Allow
        Action:
@@ -15,15 +15,28 @@ provider:
           - dynamodb: PutItem
           - dynamodb: UpdateItem
           - dynamodb: DeleteItem
-       Resource: "arn: aws: dynamodb: ${opt: region, 
-       self: provider.region}: *:table/$
-       {self.provider.environment.DYNAMODB_TABLE}"
+       Resource: "arn :aws :dynamodb :${opt: region, 
+       self :provider.region} : * :table/$
+       {self :provider.environment.DYNAMODB_TABLE}"
 
 
 
 functions:
-  hello:
-    handler: handler.hello
+  create:
+        handler: handler.create
+        events: 
+            - http: 
+                path: notes
+                method: post
+                cors: true
+    getOne:
+        handler: handler.getOne
+        events: 
+            - http:
+                path: notes/{id}
+                method: get
+                cors: true
+        
 
 
 resources:

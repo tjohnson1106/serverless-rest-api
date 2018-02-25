@@ -6,7 +6,7 @@ const AWS = require("aws-sdk");
 const dynamoDb = new AWS.DynamoDb.DocumentClient({
   region: "locahost",
   endpoint: "http://localhost:8000"
-});
+}); //remove when deploying
 
 module.exports.hello = (event, context, callback) => {
   const response = {
