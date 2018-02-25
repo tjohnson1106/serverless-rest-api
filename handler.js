@@ -19,6 +19,7 @@ module.exports.create = (event, context, callback) => {
       content: data.content
     }
   };
+
   dynamoDb.put(params, error => {
     if (error) {
       console.error(error);
