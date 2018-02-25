@@ -10,15 +10,34 @@ const dynamoDb = new AWS.DynamoDb.DocumentClient({
 
 module.exports.create = (event, context, callback) => {
   //create a note and store it in the database
-  const response = {
-    statusCode: 200,
-    body: JSON.stringify("add a note")
+  const data = JSON.parse(event.body);
+
+  const params = {
+    TableName: process.env.DYNAMODB_TABLE,
+    Item: {
+      id: uuid.v1(),
+      content: data.content
+    }
   };
-  callback(null, response);
+  dynamoDb.put(params, error => {
+    if (error) {
+      console.error(error);
+      return callback(null, {
+        statusCode: error.statusCode || 500,
+        headers: { "Content-Type": "text/plain" },
+        body: "Could not create note"
+      });
+    }
+
+    const response = {
+      statusCode: 200,
+      body: JSON.stringify(params.Item)
+    };
+    callback(null, response);
+  });
 };
 
 module.exports.getOne = (event, context, callback) => {
-  //create a note and store it in the database
   const response = {
     statusCode: 200,
     body: JSON.stringify("gets a single note")
@@ -27,7 +46,6 @@ module.exports.getOne = (event, context, callback) => {
 };
 
 module.exports.getAll = (event, context, callback) => {
-  //create a note and store it in the database
   const response = {
     statusCode: 200,
     body: JSON.stringify("gets all notes")
@@ -36,7 +54,6 @@ module.exports.getAll = (event, context, callback) => {
 };
 
 module.exports.update = (event, context, callback) => {
-  //create a note and store it in the database
   const response = {
     statusCode: 200,
     body: JSON.stringify("updates a note")
@@ -45,7 +62,6 @@ module.exports.update = (event, context, callback) => {
 };
 
 module.exports.delete = (event, context, callback) => {
-  //create a note and store it in the database
   const response = {
     statusCode: 200,
     body: JSON.stringify("deletes a note")
